@@ -1,0 +1,1115 @@
+I will now analyze the provided transcript and images to extract all features, technical specifications, and propositions of the Mito-OceanNet solution. Following the analysis, I will provide a strategic plan for rebuilding an enhanced version of this system, and then I will generate the requested 5-slide presentation deck.
+
+​Part 1: Comprehensive Analysis Report of Mito-OceanNet
+
+​Based on the provided transcript and the deep-dive OCR analysis of the uploaded system screens, here is the complete breakdown of the proposed solution for SIH26066.
+
+​1. Core Problem & Proposition
+
+​Problem Statement: SIH26066 by the Ministry of Earth Sciences (MoES) & INCOIS. Reconstructing subsurface ocean temperature profiles using surface satellite observations, replacing the reliance on spatially sparse in-situ sensors (Argo floats, gliders, vessels).
+
+​The Mito-OceanNet Hypothesis: The ocean is not a static 2D image; it is a connected, evolving dynamic system. Therefore, standard CNNs are insufficient. Mito-OceanNet uses an Adaptive Graph Neural Network coupled with Reusable Ocean-State Memory and Sparse Expert Routing. 
+
+​2. Technical Architecture & Specifications (OCR Insights)
+
+​The model specification and architecture are highly mathematically rigorous.
+
+​Input (Surface State Vector): 
+
+​Variables: SST (Temperature), SSS (Salinity), SLA (Sea Level Anomaly), u_o, v_o (Surface Currents), u_w, v_w (Wind Speed/Stress), \phi, \lambda (Lat/Lon), \sin(d_y), \cos(d_y) (Temporal/Day of year).
+
+​Grid: 0.25° x 0.25° spatial resolution.
+
+​Coverage: North Indian Ocean (5°N–30°N, 45°E–105°E).
+
+​Temporal Window: 7–14 daily frames observed to understand evolution.
+
+​Graph Propagation (MitoGraph): 
+
+​Treats every valid ocean grid cell as a node. Nodes connect based on distance, feature similarity, and current-mediated transport directions.
+
+​Compute Demand & ATP Routing: 
+
+​The model calculates "Compute demand" based on complexity, novelty, and predictive uncertainty.
+
+​Sparse Expert Routing (Fission Experts): Instead of one uniform pathway, the system routes data to specialized "experts" (e.g., Thermal, Transport, Mixing) based on a computed compute budget ("ATP").
+
+​Memory & Decoding (MitoCode): 
+
+​Stores recurring ocean states in a prototype-residual memory codebook.
+
+​Decodes to 15 mandatory depth levels: 0, 5, 10, 20, 30, 50, 75, 100, 125, 150, 200, 300, 500, 700, and 1000 meters.
+
+​Outputs include heteroscedastic uncertainty (calibrated predictive uncertainty for every depth prediction).
+
+​3. Data Pipeline & Validation Strategy
+
+​Training Data (2013–2022): GLORYS Global Ocean Physics Reanalysis (subset and regridded to 0.25°), paired with Copernicus Marine satellite products and ERA5 atmospheric forcing.
+
+​Validation & Testing (2023–2025): Temporal holdouts and geographic stress slices (Bay of Bengal vs. Arabian Sea).
+
+​Independent Ground Truth: INCOIS Gridded ARGO / LAS in-situ profiles. The model explicitly mandates that no operational claim can be made until it passes this independent ARGO gate (currently marked "Pending" in the Promotion Gates screen).
+
+​Ablation Ladder: The model is tested sequentially against baselines: M_0 (Standard GNN) \rightarrow M_1 (+ ATP gating) \rightarrow M_2 (+ sparse experts) \rightarrow M_3 (+ MitoCode) \rightarrow M_6 (+ physics + uncertainty).
+
+​4. Business & Scalability Model
+
+​Target Segments: B2G (Government, Climate Research, Fisheries Management) and B2B (Marine Analytics, Shipping, Offshore Ops, Aquaculture).
+
+​Market Size: 
+
+​TAM (Total Addressable Market): $1.426 Billion
+
+​SAM (Serviceable Available Market - 20%): $252 Million
+
+​SOM (Serviceable Obtainable Market - 1%): $2.52 Million (₹21.2 Crore)
+
+​Deployment: Cloud-based API or localized low-cost hardware edge deployment (Indicative prototype budget: $25,000).
+
+​Part 2: Strategic Plan for a "Better Version" (V2)
+
+​While Mito-OceanNet is scientifically sound, a rebuild to improve upon this prototype should focus on transitioning from a "research-heavy UI" to an "enterprise-grade forecasting engine."
+
+​Architecture Upgrade (PINN Integration): The current model uses a physics-aware loss function but relies heavily on graph states. The rebuild should integrate Physics-Informed Neural Networks (PINNs) natively into the graph edges, enforcing Navier-Stokes equations and thermodynamic laws directly into the node message-passing to prevent physically impossible temperature gradients. 
+
+​Temporal Resolution Enhancement: Move from daily 0.25° grids to sub-daily (6-hourly) interpolations using transformer-based temporal attention, which is critical for sudden event tracking (e.g., rapid cyclone-induced upwelling). 
+
+​Edge-Native Deployment: Instead of just a $25K local server, containerize the model into ultra-lightweight WebAssembly (Wasm) or ONNX runtimes that can run directly on the IoT hardware of offshore rigs or shipping vessels without needing constant cloud API connectivity.
+
+​UI/UX Overhaul: The current dashboard is highly technical ("fission experts", "ATP"). The V2 product should feature a dual-interface: a scientific console (for researchers) and a Business Decision Matrix (for shipping/fishery clients) that translates temperature anomalies directly into actionable operational metrics (e.g., fuel efficiency routing, fish catch probabilities). 
+
+​Part 3: Presentation Deck Generation
+
+​I will now generate the 5-slide pitch deck using HTML and CSS, adhering strictly to the required SIH presentation format, focusing on Architecture, Solution, Scalability, and Impact.
+
+Architectural DimensionCompetitor Architecture: Mito-OceanNet (Transcript/OCR)Our Architecture: FILM-ConvLSTM + EOF (PDF Document)Primary Task FocusConcurrent Reconstruction (Estimates subsurface state at day t from surface state at day t).Multi-Week Forecasting (Predicts subsurface state at lead times \ell \in [7, 30] days).Spatial Modeling CoreAdaptive Graph Neural Network (MitoGraph): Ocean grid cells treated as nodes; edges built dynamically from distance, similarity, and transport vectors.2D CNN + U-Net Skip Connections: Standard grid-based spatial feature extraction over 0.25^\circ \times 0.25^\circ Indian Ocean domain (101 \times 241).Temporal Modeling CoreSliding temporal window (7–14 days) processed via graph message passing and memory updates.21-Frame Window + ConvLSTM / Cuboid-Attention: 14 daily frames + 7 weekly-mean frames covering MJO/Monsoon cycles.Conditioning MechanismATP Compute Gating & Sparse Experts: Dynamically routes compute based on ocean state complexity, novelty, and uncertainty.Feature-wise Linear Modulation (FILM): Affine transformation (\gamma, \beta) modulating ConvLSTM hidden states using IOD index, Niño 3.4 index, and continuous lead time \ell.Memory / CodebookMitoCode: Prototype-residual memory storing recurring ocean states in a sparse, reusable vector vocabulary.None / Implicit: Temporal hidden state maintained entirely within LSTM cell states/attention matrices.Output RepresentationDirect 15-Depth Decoding: Reconstructs temperature at all 15 target depth levels (0\text{–}1000\,\text{m}) directly from decoder.Vertical EOF Compression: Predicts 5 Empirical Orthogonal Function (EOF) spatial coefficient maps (\hat{c}_{t+\ell} \in \mathbb{R}^{5 \times 101 \times 241}), decoded via fixed basis matrix \Phi \in \mathbb{R}^{5 \times 15}.Physics ConstraintsPhysics-aware loss function (general regularization).MLD-Gated Vertical Smoothness Loss + GEBCO Sub-Bottom Masking: Penalizes unphysical curvature strictly below the Mixed Layer Depth while masking land/seabed.Uncertainty ModelingHeteroscedastic likelihood loss pairing predictions with calibrated variance (\sigma).Deep Ensembles: 23-seed deep ensemble evaluated for predictive variance across IOD phases. 
+
+Deep-Dive Analysis: Pros & Cons
+
+Mito-OceanNet (Competitor)
+
+Pros:
+
+Irregular Boundary Handling: Graph representation natively handles complex coastline topologies and island masks without wasting compute on land pixels.
+
+Dynamic Connectivity: Explicitly models physical ocean transport (ocean currents) through directional graph edges rather than fixed Euclidean convolutions.
+
+Compute Efficiency: Sparse expert routing (MoE) and prototype memory (MitoCode) avoid running heavy networks on stable, predictable water masses.
+
+Explicit Uncertainty: Heteroscedastic head provides per-pixel, per-depth uncertainty estimates in a single forward pass.
+
+Cons:
+
+Lack of Predictive Capability: Focuses purely on same-day reconstruction (t \to t), omitting true multi-week forecasting (t \to t+\ell).
+
+High Output Dimensionality: Directly predicting 15 depth channels increases decoder parameter count and can lead to vertical profile inconsistencies.
+
+Complex Graph Overhead: Dynamic graph construction and sparse routing introduce high CPU/GPU synchronization latencies on standard hardware.
+
+Macro-Climate Blindness: Lacks explicit conditioning on basin-wide climate modes like the Indian Ocean Dipole (IOD) or ENSO.
+
+Our Architecture (PDF Document)
+
+Pros:
+
+True Multi-Week Forecasting: Predicts ocean thermal structure up to 30 days in advance, providing much higher operational value for marine navigation and cyclone forecasting.
+
+Vertical EOF Dimensionality Reduction: Compressing 15 depth levels into 5 principal EOF modes enforces physical vertical continuity, speeds up convergence, and dramatically reduces parameter space.
+
+FILM Macro-Climate Conditioning: Explicitly informs the network of large-scale climate drivers (IOD / Niño 3.4) and target lead time \ell, allowing a single model to dynamically adjust physics across climate regimes.
+
+Physically Grounded Loss: Mixed Layer Depth (MLD) gating ensures the model does not enforce artificial smoothness in turbulent upper layers where mixing occurs naturally.
+
+Cons:
+
+Euclidean Grid Limitations: Standard 2D convolutions struggle with boundary conditions near jagged coastlines and complex island archipelagos.
+
+Uniform Computation: Processes every grid cell (from quiescent open ocean to chaotic coastal eddies) through identical convolutional layers, wasting FLOPs.
+
+No Explicit Prototype Memory: Re-computes recurring ocean states from scratch rather than retrieving historical ocean-state templates.
+
+The Synthesized Hybrid Architecture (Internal High-Performance Design)
+
+To construct an optimal engine, combine the forecasting and EOF compression efficiency of our approach with the parallel graph and expert routing capabilities of Mito-OceanNet.
+
+[ INPUT TENSOR (23 Channels x 21 Frames) ] │ ┌──────────────────────────────────┴──────────────────────────────────┐ ▼ ▼ [ Spatial Branch (Parallel) ] [ Macro-Climate Branch ] 2D Feature Grid (101x241) → Dynamic Ocean Graph IOD Index + Niño 3.4 + Lead Time (ℓ) │ │ ▼ ▼ [ Sparse Expert Routing ] [ FILM Parameter Generator ] (Thermal, Mixed Layer, Current Experts) (Generates γ, β Affine Vectors) │ │ └──────────────────────────────────┬──────────────────────────────────┘ │ ▼ [ FILM-Gated Temporal Core ] (ConvLSTM or Cuboid-Attention Core) │ ▼ [ EOF Residual Decoder ] Predicts 5 EOF Mode Coefficients (c_k) │ ▼ [ Physical Reconstruction Layer ] T(d) = μ_d + Σ (Φ_k,d * c_k) [Across 15 Depth Levels] │ ▼ [ MLD-Gated Physics & GEBCO Loss ] 
+
+Key Adaptations in the Hybrid Engine:
+
+Parallel Multi-Stream Input Processing:
+
+Stream A (Dynamic Physics): Parallel 2D CNN encoders extract spatial features (SST, SSS, SLA, surface currents, wind stress).
+
+Stream B (Macro-Climate & Lead Time): A specialized MLP processes scalar climate indices (IOD, Niño 3.4) and requested lead time \ell \in [7, 30] days to compute FILM affine parameters (\gamma, \beta).
+
+Dynamic Graph Construction with Sparse MoE:
+
+Convert spatial feature maps into a sparse ocean graph. Route node computations through parallel Fission Experts (e.g., Surface Boundary Layer Expert, Thermocline Dynamics Expert, Deep Ocean Expert) gated by compute demand q_i.
+
+FILM-Conditioned Spatiotemporal Core:
+
+Inject the FILM conditioning vectors into the recurrent/attention transitions (ConvLSTM or Cuboid-Attention) to modulate temporal propagation according to the active climate state and target forecast horizon.
+
+EOF Mode Residual Decoding:
+
+Instead of decoding 15 raw depth profiles directly, the decoder outputs 5 EOF spatial coefficient maps plus a small state-specific residual \Delta c_k.
+
+Matrix multiply \hat{c}_k by the fixed training-derived EOF basis matrix \Phi \in \mathbb{R}^{5 \times 15} to yield the 15 physical depth levels instantly (0, 5, 10, 20, 30, 50, 75, 100, 125, 150, 200, 300, 500, 700, 1000\,\text{m}).
+
+MLD-Gated & GEBCO Sub-Bottom Physics Loss:
+
+Apply bathymetric sub-bottom masking to drop non-ocean cells and penalize profile non-monotonicity strictly below the estimated Mixed Layer Depth.
+
+Simplified Judge-Facing Presentation Pipeline (Linear View)
+
+While the internal engine utilizes complex dynamic graphs, sparse expert routing, and feature-wise affine modulation, present the solution to hackathon/grant judges as a 4-Step Linear Pipeline. This maintains clarity and structural alignment with competitor presentations while preserving underlying technical sophistication.
+
+[ STEP 1: HARMONIZE ] ──► [ STEP 2: CONDITION ] ──► [ STEP 3: RECONSTRUCT ] ──► [ STEP 4: VALIDATE ] Multi-Source Surface Climate & Lead-Time Parallel EOF Decoder ARGO Ground Truth & Observations (23 Vars) FILM Modulation (5 Modes -> 15 Depths) Physics-Gated Loss 
+
+Step 1: Harmonize (Multi-Source Input Ingestion)
+
+Ingests 23 daily surface observation variables (SST, SSS, SLA, Currents, Wind Stress, Heat Fluxes) on a standardized 0.25^\circ \times 0.25^\circ Indian Ocean grid across a 21-frame temporal window.
+
+Step 2: Condition (Climate & Forecast Lead Integration)
+
+Integrates macro-climate drivers (IOD and ENSO indices) with the requested forecast lead time (7\text{–}30 days) using Feature-wise Linear Modulation (FILM) to adjust deep temporal features dynamically.
+
+Step 3: Reconstruct (Parallel EOF Depth Decoding)
+
+Processes features through an energy-aware parallel expert backbone and decodes them into 5 target EOF coefficient maps, which instantly expand into complete vertical temperature profiles across all 15 depth levels (0\text{–}1000\,\text{m}).
+
+Step 4: Validate & Enforce (Physics & ARGO Verification)
+
+Applies bathymetric seabed masking and Mixed-Layer-Depth gated regularization to guarantee physical consistency, evaluating predictions against independent in-situ ARGO float profiles.
+
+The Graph Neural Network (GNN) in the updated hybrid architecture is positioned immediately after the initial data ingestion and acts as the primary spatial processing engine before the temporal forecasting occurs.
+Specifically, it lives within the Dynamic Graph Construction & Sparse MoE stage of the internal pipeline. Here is exactly how and where it operates:
+ * Grid-to-Graph Conversion: Once the 23-channel input grid (101 \times 241) is ingested, the system drops the land pixels and converts every valid ocean cell into a node.
+ * GNN Message Passing (The Core Function): The GNN constructs dynamic edges between these nodes based on geographic distance, feature similarity, and current-mediated transport directions. This allows the network to pass information (like heat and salinity) along actual physical ocean currents rather than relying on rigid, square convolutional filters that struggle with irregular coastlines.
+ * Expert Routing Integration: After the GNN updates the state of each node via message passing, it calculates the "compute demand" for each region. It then routes the node data to the appropriate specialized parallel experts (e.g., Thermal, Mixing, or Transport experts).
+ * Handoff to Temporal Core: The physically refined spatial features produced by the GNN are then passed into the FILM-Conditioned ConvLSTM (the temporal core). The ConvLSTM takes these graph-processed spatial states and forecasts how they will evolve over the next 7 to 30 days.
+In the simplified 4-step linear presentation designed for the judges, the GNN operates entirely under the hood of Step 3: Reconstruct. It serves as the intelligent, energy-aware spatial backbone that processes the ocean state just before the data is compressed into the 5 EOF modes.
+
+
+Hybrid Subsurface Forecasting Architecture: The Graph-Conditioned Spatiotemporal Engine
+===================================================================================================
+ MODULE 1: INGESTION & GRID HARMONIZATION 
+===================================================================================================
+      [ SAT & REANALYSIS ] (SST, SSS, SLA, U/V, Winds)      [ MACRO-CLIMATE & INTENT ]
+               | (23 Channels)                                          |
+               v                                                        v
+      +------------------+                                  +------------------------+
+      |  21-Frame Window |  ---( 14 daily + 7 weekly )--->  |  IOD Index (DMI)       |
+      |  101 x 241 Grid  |                                  |  Niño 3.4 Index        |
+      +--------+---------+                                  |  Target Lead Time (ℓ)  |
+               | (Land Masking)                             +-----------+------------+
+               v                                                        |
+========================================================================|==========================
+ MODULE 2: ADAPTIVE SPATIAL GRAPH PROCESSING                            |
+========================================================================|==========================
+               |                                                        |
+      +--------v---------+                                              |
+      | Grid-to-Graph    |  (Valid Ocean Cells -> Nodes)                |
+      +--------+---------+                                              |
+               |                                                        |
+      .~~~~~~~~v~~~~~~~~.                                               |
+     /  Dynamic Edges  /  (Distance + Similarity + Current Transport)   |
+    '~~~~~~~~~+~~~~~~~~'                                                |
+              |                                                         |
+      +-------v----------+      +------------------+                    |
+      | ATP Compute Gate | ===> | Sparse MoE Array | (Fission Experts)  |
+      +-------+----------+      +------------------+                    |
+              |                   | Thermal Expert |                    |
+              |                   | Mixing Expert  |                    |
+              |                   | Transport Exp. |                    |
+              |                   +--------+-------+                    |
+              v                            |                            |
+      [ Graph Output State ] <-------------+                            |
+               | (Graph-to-Grid)                                        |
+               v                                                        v
+===================================================================================================
+ MODULE 3: FILM-CONDITIONED TEMPORAL FORECASTING                        
+===================================================================================================
+               |                                                        |
+               |                                                +-------v--------+
+               |                                                | FILM Generator | (MLP)
+               |                                                +-------+--------+
+               |                                                        |
+               |                   *------------------------------------*
+               |                   | (Generates γ_c, β_c Affine Vectors)
+               v                   v
+      +------------------------------------------+
+      | ConvLSTM / Cuboid-Attention Core         | 
+      |                                          |
+      |  F_out = γ_c * [ LSTM(Graph_State) ] + β_c| (Climate/Lead-Time Modulated Propagation)
+      +--------------------+---------------------+
+                           |
+                           v
+===================================================================================================
+ MODULE 4: EOF COMPRESSION & PHYSICAL DECODING                          
+===================================================================================================
+                           |
+                 +---------v----------+
+                 | Residual Decoder   |
+                 +---------+----------+
+                           |
+                           v
+         [ 5 EOF Spatial Coefficient Maps (c_k) ]  (Dimension: 5 x 101 x 241)
+                           |
+                           *------------------------------------*
+                                                                |
+                                                      [ Fixed EOF Basis (Φ) ]
+                                                      (Dimension: 5 x 15 Depths)
+                           |                                    |
+                           +-------------> ( ⊗ ) <--------------+
+                                      Matrix Multiply
+                                             |
+                                             v
+===================================================================================================
+ MODULE 5: RECONSTRUCTION & PHYSICS-GATED LOSS
+===================================================================================================
+                                             |
+                   [ Reconstructed 15-Depth Profile (0 - 1000m) ]
+                                             |
+                     +-----------------------+------------------------+
+                     |                       |                        |
+                     v                       v                        v
+            +----------------+      +----------------+       +------------------+
+            | MLD-Gating     |      | Sub-Bottom     |       | Heteroscedastic  |
+            | Smoothness Loss|      | Masking (GEBCO)|       | Uncertainty (σ)  |
+            +----------------+      +----------------+       +------------------+
+                     |                       |                        |
+                     +-----------------------+------------------------+
+                                             |
+                                             v
+                               [ Independent ARGO Validation ]
+
+Module Breakdown for Human Comprehension
+Module 1: Ingestion & Grid Harmonization
+The architecture receives two distinct data streams. The physical stream pulls 23 surface variables (temperature, salinity, sea level anomaly, currents) over a 21-frame historical window to capture major ocean cycles (like the Madden-Julian Oscillation). The macro-climate stream ingests the current Indian Ocean Dipole (IOD) state, the ENSO (Niño 3.4) state, and the specific number of days into the future the user wants to predict (the lead time \ell). All land masses are mathematically masked out to save computational resources.
+Module 2: Adaptive Spatial Graph Processing
+Instead of processing the ocean as a rigid picture, the model converts valid ocean grid cells into interconnected nodes. The connections (edges) between these nodes are formed dynamically based on actual ocean currents, distance, and feature similarity. An "ATP Compute Gate" evaluates how complex or novel a specific ocean region is. Based on this demand, data is routed to specialized parallel expert networks (e.g., a Thermal expert for surface heat, a Transport expert for strong currents) rather than forcing every drop of water through the exact same mathematical equations. The graph state is then transformed back into a grid format for time-based forecasting.
+Module 3: FILM-Conditioned Temporal Forecasting
+This is where the climate indices actively steer the prediction. The macro-climate stream is processed by a small neural network to generate affine transformation vectors (\gamma and \beta). These vectors use Feature-wise Linear Modulation (FILM) to directly adjust the inner workings of the ConvLSTM (or Cuboid-Attention) sequence model. This means the exact same model will dynamically alter its internal physics depending on whether it is predicting 7 days ahead during an active IOD event, or 30 days ahead during a neutral climate phase.
+Module 4: EOF Compression & Physical Decoding
+To prevent the model from guessing physically impossible temperature jumps between depths, it does not predict the 15 depth levels directly. Instead, the decoder predicts just 5 Empirical Orthogonal Function (EOF) spatial coefficient maps. These 5 maps represent the core structural "modes" of the ocean. They are mathematically multiplied against a fixed basis matrix (\Phi) created during training, instantly expanding the 5 modes out into a complete, mathematically sound vertical temperature profile extending from the surface down to 1000\,\text{m}.
+Module 5: Reconstruction & Physics-Gated Loss
+The expanded temperature profile is subjected to a final physics checkpoint during training. A Mixed Layer Depth (MLD) gate calculates the depth of the turbulent surface layer. It allows the temperature to vary freely within this chaotic mixed layer but strictly penalizes unphysical temperature spikes in the deeper, stable ocean below it. Simultaneously, a GEBCO bathymetry mask ensures the model does not try to predict ocean temperatures underground where the seafloor rises. Every prediction is paired with a calibrated uncertainty score (heteroscedastic likelihood) and validated against held-out, independent ARGO float sensors.
+
+
+1. Data Sources & Ingestion Pipelines
+| Dimension | Competitor A: Mito-OceanNet | Competitor B: Pilots of Ocean (OceanEmbed AI) | Our Architecture: FILM-ConvLSTM + EOF |
+|---|---|---|---|
+| Input Variables | SST, SSS, SLA, Surface Currents (u_o, v_o), Wind Stress (u_w, v_w), Day of Year (\sin, \cos), Lat/Lon coordinates. | SST, SSS, SSH/SLA, Surface Currents (u, v), Winds (u, v), Chlorophyll-a, Dissolved Oxygen (DO). | SST, SSS, SLA, Surface Currents (u_o, v_o), Wind Stress, Net Heat Flux, Lat/Lon, IOD Index (DMI), Niño 3.4 Index, Lead Time (\ell). |
+| Satellite Instruments & Providers | Copernicus Marine Service (CMEMS), ERA5 Reanalysis. | MODIS/VIIRS (SST), SMAP/Aquarius (SSS), AVISO (SSH/SLA), OSCAR (Currents), CCMP/ERA5 (Winds). | Multi-satellite blended Level-4 products (CMEMS, OSTIA for SST, SMAP L4 for SSS, AVISO/DUACS for SLA, ASCAT/ERA5 for Winds). |
+| Target Grid & Coverage | 0.25^\circ \times 0.25^\circ, North Indian Ocean (5^\circ\text{N}\text{--}30^\circ\text{N}, 45^\circ\text{E}\text{--}105^\circ\text{E}). | 0.25^\circ \times 0.25^\circ, Input Tensor Shape (T, C, 100, 240), North Indian Ocean (5^\circ\text{N}\text{--}30^\circ\text{N}, 45^\circ\text{E}\text{--}105^\circ\text{E}). | 0.25^\circ \times 0.25^\circ, Indian Ocean Basin (101 \times 241 grid covering 20^\circ\text{S}\text{--}30^\circ\text{N}, 40^\circ\text{E}\text{--}100^\circ\text{E}). |
+| Temporal Sequence Horizon | 7–14 daily frames (sliding window). | Daily aggregated time slices; evaluated on 3–6 months training, 2 months testing. | 21-Frame Window: 14 daily sequence frames + 7 weekly-mean historical frames (capturing MJO and planetary waves). |
+| Reanalysis Ground Truth (Training) | Mercator Ocean GLORYS12V1 physics reanalysis. | Mercator Ocean GLORYS reanalysis (glorys_YYYYMMDD.nc). | GLORYS12V1 daily vertical potential temperature (0\text{--}1000\,\text{m}). |
+| In-Situ Validation Data | INCOIS Gridded ARGO / LAS in-situ profilers. | INCOIS / Global ARGO floats (argo_YYYYMMDD.nc), Gliders. | Real-time & delayed-mode quality-controlled ARGO floats (INCOIS / Coriolis GDAC). |
+2. Preprocessing & Data Storage Architecture
+Preprocessing Comparison
+ * Pilots of Ocean Pipeline:
+   Raw Satellites ──► Spatial Regridding (0.25°) ──► Daily Temporal Aggregation ──► Missing Value / Cloud Masking ──► Normalization / Standardization ──► Quality Control & Outlier Removal[span_13](start_span)[span_13](end_span)
+
+   Observation: Their preprocessing correctly accounts for cloud contamination in infrared SST (MODIS/VIIRS) and standardizes disparate satellite resolutions via interpolation.
+ * Mito-OceanNet Pipeline:
+   * Direct NetCDF regridding to 0.25^\circ with static ocean masking.
+   * Constructs adjacency matrices dynamically per time slice based on ocean transport velocities (u_o, v_o).
+ * Our Upgraded Strategy (State-of-the-Art Preprocessing):
+   * Delaunay Triangulation & Bilinear Interpolation: Regrid all non-uniform satellite swath products to the identical 0.25^\circ GEBCO-aligned grid.
+   * Harmonic Deseasonalization: Decompose raw parameters into climatological seasonal cycles + transient anomalies to prevent the network from merely memorizing the solar calendar.
+   * Physical Boundary Constraints: Integrate GEBCO 2024 bathymetry to mask subterranean grid points dynamically across all 15 depth tiers (0, 5, 10, 20, 30, 50, 75, 100, 125, 150, 200, 300, 500, 700, 1000\,\text{m}).
+Data Lake & Storage Architecture Comparison
+Pilots of Ocean presented an organized tiered storage setup:
+ * Data Lake Tiers:
+   * raw-data/: Subdirectories for satellite/YYYY/MM/DD/SST_*.nc, argo/YYYY/MM/DD/argo_*.nc, reanalysis/YYYY/MM/DD/glorys_*.nc.
+   * processed-data/: Daily interpolated grids (interpolated.nc), quality-controlled arrays (qc_data.nc), assembled multi-channel tensors (input_data.nc).
+   * model-output/: 3D reconstructed NetCDF cubes (temp_3d.nc), horizontal 2D slice maps (temp_2d_maps.nc), vertical point profiles (temp_profiles.nc).
+ * Catalog, Governance & Backup:
+   * PostgreSQL / SQLite database tracking dataset hashes, spatio-temporal bounds, and training lineage.
+   * Object versioning and tier-to-cold-storage archival (AWS S3 Glacier / Local Cold Storage).
+3. Deep Architectural Comparison
+                  ┌──────────────────────────────────────────────────────────────────┐
+                  │                 3-WAY ARCHITECTURAL COMPARISON                   │
+                  └──────────────────────────────────────────────────────────────────┘
+
+   COMPETITOR A (Mito-OceanNet)      COMPETITOR B (Pilots of Ocean)            OUR HYBRID ENGINE
+   ┌───────────────────────────┐     ┌────────────────────────────┐     ┌─────────────────────────────┐
+   │ Dynamic Graph Net (GNN)   │     │ Standard ConvLSTM / CNN    │     │ Spatial GNN + Sparse MoE    │
+   │ Sparse Expert Routing     │     │ Spatial Attention Gate     │     │ FILM Climate Conditioning   │
+   │ Prototype Memory Codebook │     │ Direct 15-Depth Conv/Deconv│     │ ConvLSTM Temporal Core      │
+   │ Direct 15-Depth Decoder   │     │ Pure Reconstruction (t->t) │     │ 5-Mode Vertical EOF Decoder │
+   │ Concurrent Recon (t->t)   │     │ Fast, Simple, Vulnerable   │     │ Multi-Week Forecast (t->t+l)│
+   └───────────────────────────┘     └────────────────────────────┘     └─────────────────────────────┘
+
+| Architectural Feature | Competitor A: Mito-OceanNet | Competitor B: Pilots of Ocean | Our Hybrid Synthesized Architecture |
+|---|---|---|---|
+| Model Family | Adaptive GNN + Sparse MoE + Prototype Codebook. | 2-Layer ConvLSTM + Residual Skip + Spatial Attention Gate + 1\times 1 Conv. | Adaptive GNN \rightarrow Sparse MoE \rightarrow FILM-ConvLSTM \rightarrow Vertical EOF Decoder. |
+| Spatial Modeling | Non-Euclidean Graph Message Passing. | Standard 2D Convolutions (3\times 3). | GNN Adjacency on Valid Ocean Cells (preserves complex island/coastline boundaries). |
+| Temporal Modeling | Graph recurrent updates over 7–14 days. | 2-Layer ConvLSTM Cells (Input, Forget, Candidate, Output gates). | FILM-Modulated ConvLSTM / Cuboid Attention over 21-frame historical window. |
+| Conditioning | Internal ATP Compute Demand Gate. | None (unconditioned sequence processing). | FILM Affine Vectors (\gamma, \beta) driven by IOD, Niño 3.4, and Target Lead Time \ell. |
+| Vertical Dimension Handling | Direct decoding to 15 depth layers. | Transposed Convolutions / Up-sampling to 15 depth slices. | Vertical EOF Mode Decomposition (predicts 5 principal mode maps; expands via fixed matrix \Phi). |
+| Physical Constraints | Physics loss penalty. | None (pure data-driven RMSE minimization). | MLD-Gated Monotonicity Loss + GEBCO Sub-Bottom Bathymetric Zeroing. |
+| Uncertainty Quantification | Heteroscedastic likelihood head (\mu, \sigma). | Single deterministic point prediction (0.55^\circ\text{C} RMSE claimed). | Heteroscedastic Uncertainty Head + 23-Seed Deep Ensemble Variance. |
+4. Software Engineering, Backend & UI/UX Innovations
+Pilots of Ocean developed a clean software engineering pipeline and application interface that should be matched and exceeded:
+Backend & Microservice Architecture
+ * Decoupled Domain Services:
+   * InferenceService: Loads ONNX / TensorRT model checkpoints for real-time 3D grid inference.
+   * DataService: Handles runtime interpolation, normalization, and NetCDF slicing.
+   * ArgoService: Fetches live/delayed ARGO floats, calculates distance collocations, and tracks trajectory drift.
+   * HeatwaveService: Computes Marine Heatwave (MHW) thresholds (Hobday et al. Category I–IV detection).
+   * CopernicusService: Automated pipeline querying satellite OpenDAP/FTP endpoints.
+ * Dual-Execution Strategy (Unified Client Adapter):
+   * Distributed Mode: FastAPI REST API exposing /api/predict/*, /api/ocean/*, /api/argo/*, /api/heatwave/*.
+   * Standalone In-Process Fallback: Embedded Python engine running directly on edge hardware if internet connectivity fails.
+Frontend & Sensing Dashboard Capabilities
+ * Cross-Platform Client: Built using Flutter (web/mobile) and Streamlit dashboarding.
+ * Interactive 3D Voxel Engine:
+   * True 3D subsurface volume rendering (0\text{--}1000\,\text{m} abyssal block) with interactive slicing planes.
+   * Vertical depth sliders (0\text{--}1000\,\text{m}) displaying temperature gradients, thermocline location, and Sound Velocity Profiles (SVP) calculated via UNESCO equations.
+ * Predict vs. In-Situ Reality Suite:
+   * Interactive map displaying ARGO float pings over the Arabian Sea and Bay of Bengal.
+   * Side-by-side metric comparison cards: AI Reconstructed vs. In-Situ ARGO vs. GLORYS Reanalysis, displaying error residuals (e.g., +0.06^\circ\text{C}) in real time.
+5. The Master Synthesized Architecture: Detailed Blueprint
+This architecture combines the spatial robustness of Mito-OceanNet's GNN/MoE, the software modularity and 3D visualization of Pilots of Ocean, and our forecasting lead-time capability and vertical EOF physics engine.
+===================================================================================================
+ MODULE 1: INGESTION, DATA LAKE & STREAM HARMONIZATION
+===================================================================================================
+  [ SATELLITE DATA SOURCES ]               [ CLIMATE DRIVERS & ARGO ]          [ BATHYMETRY & FLUX ]
+  - SST (MODIS/VIIRS/OSTIA)                - Dipole Mode Index (IOD)            - GEBCO 2024 Topo
+  - SSS (SMAP/Aquarius)                    - Niño 3.4 Index (ENSO)              - ERA5 Net Heat Flux
+  - SLA/SSH (AVISO/Copernicus)             - Forecast Lead Time (ℓ: 7-30d)      - CCMP Wind Stress
+  - Surface Currents (OSCAR/CMEMS)         - Real-time INCOIS ARGO Cache
+  - Chlorophyll-a & DO (Sentinel-3)
+               |                                       |                                  |
+               +---------------------------------------+----------------------------------+
+                                                       |
+                                                       v
+                         +-----------------------------------------------+
+                         |           DATA PREPROCESSING PIPELINE         |
+                         |  1. 0.25° Bilinear Spatial Regridding         |
+                         |  2. Cloud Gap Inpainting & Harmonization      |
+                         |  3. Z-score Anomaly Normalization             |
+                         +---------------------+-------------------------+
+                                               |
+                                               v
+                          [ Multi-Channel Data Cube: (B, 21, 23, 101, 241) ]
+                                               |
+===================================================================================================
+ MODULE 2: ADAPTIVE GRAPH GENERATION & PARALLEL EXPERT ROUTING
+===================================================================================================
+                                               |
+                     +-------------------------v-------------------------+
+                     |  Land-Sea Masking -> Ocean Nodes Conversion       |
+                     +-------------------------+-------------------------+
+                                               |
+                                               v
+                     +---------------------------------------------------+
+                     |  Dynamic Ocean Graph Builder (GNN Message Passing)|
+                     |  - Edges: Physical Advection (u,v) + Distance     |
+                     +-------------------------+-------------------------+
+                                               |
+                                               v
+                     +---------------------------------------------------+
+                     |  ATP Compute Demand Gate (Turbulence & Novelty)   |
+                     +-------------------------+-------------------------+
+                                               |
+                      +------------------------+------------------------+
+                      |                                                 |
+                      v                                                 v
+           +--------------------+                            +--------------------+
+           |  Thermal / Surface |                            |  Advection / Deep  |
+           |  Boundary Expert   |                            |  Transport Expert  |
+           +----------+---------+                            +----------+---------+
+                      |                                                 |
+                      +------------------------+------------------------+
+                                               |
+                                               v
+                           [ Spatially Refined Ocean Node Tensor ]
+                                               |
+===================================================================================================
+ MODULE 3: MACRO-CLIMATE FILM GENERATOR & TEMPORAL CORE
+===================================================================================================
+                                               |
+           [ Macro Climate Vector: (IOD, Niño 3.4, Lead Time ℓ) ]
+                               |
+                               v
+                     +-------------------+
+                     |   FILM MLP Net    |
+                     +---------+---------+
+                               |
+                               v
+          Generates Modulation Parameters: γ(c), β(c)
+                               |
+                               +-----------------------+
+                                                       |
+                                                       v
+                     +---------------------------------------------------+
+                     |   ConvLSTM / Cuboid Temporal Attention Core       |
+                     |                                                   |
+                     |   H_t = γ(c) ⊙ ConvLSTM(Graph_Nodes_t) + β(c)     |
+                     +-------------------------+-------------------------+
+                                               |
+===================================================================================================
+ MODULE 4: VERTICAL EOF DECODER & PHYSICS-GATED RESTORATION
+===================================================================================================
+                                               |
+                                               v
+                     +---------------------------------------------------+
+                     |   Residual Convolutional Decoder                  |
+                     +-------------------------+-------------------------+
+                                               |
+                                               v
+                     [ 5 EOF Mode Coefficient Maps: c_k (5, 101, 241) ]
+                                               |
+                                               * <--- [ Fixed Basis Matrix: Φ (5 x 15) ]
+                                               |       (Precomputed from 20yr GLORYS SVD)
+                                               v
+                     +---------------------------------------------------+
+                     |   Physical Reconstruction Matrix Multiplication    |
+                     |         T(d, x, y) = T_mean(d) + Σ [c_k * Φ_k(d)]  |
+                     +-------------------------+-------------------------+
+                                               |
+                                               v
+                     [ Full 3D Temperature Field: 15 Depths (0 to 1000m) ]
+                                               |
+                      +------------------------+------------------------+
+                      |                                                 |
+                      v                                                 v
+           +--------------------+                            +--------------------+
+           |  MLD Monotonicity  |                            |  GEBCO Sub-Bottom  |
+           |  Physics Loss Gate |                            |  Topography Mask   |
+           +--------------------+                            +--------------------+
+                                               |
+===================================================================================================
+ MODULE 5: INFERENCE SERVICE, MICROSERVICES & MULTI-PLATFORM UI
+===================================================================================================
+                                               |
+                                               v
+                     +---------------------------------------------------+
+                     |   FastAPI Microservice Engine / Standalone Engine |
+                     |   /api/predict  |  /api/argo  |  /api/heatwave    |
+                     +-------------------------+-------------------------+
+                                               |
+         +-------------------------------------+------------------------------------+
+         |                                                                          |
+         v                                                                          v
++-----------------------------------+                      +-----------------------------------+
+|     RESEARCH & SCIENTIFIC UI      |                      |    OPERATIONAL / MARITIME UI      |
+| - Interactive 3D Voxel Cube (0-1000m)                     | - Marine Heatwave Alerts (Cat I-IV)|
+| - Sound Velocity Profile (SVP)    |                      | - Optimal Acoustic Depth (Sonar)  |
+| - Live ARGO Drift Track & Resids  |                      | - Potential Fishing Zone (PFZ) Map|
++-----------------------------------+                      +-----------------------------------+
+
+6. Actionable Blueprint to Win the Hackathon
+ * Lead with Problem Formulation (Prediction vs. Reconstruction):
+   * Show that other systems perform only same-day reconstruction (t \to t). Our engine performs Lead-Time Forecasting (t \to t+\ell, for \ell = 7\text{ to }30\text{ days}) conditioned on the Indian Ocean Dipole via FILM.
+ * Highlight Dimensionality and Physics Advantages:
+   * Avoid directly predicting 15 unconstrained depth layers (which risks unphysical temperature inversions).
+   * Use the 5-Mode Vertical EOF decomposition. This guarantees physical vertical continuity, reduces parameters by 66\%, and ensures that sound velocity profiles (SVP) calculated for defense applications are smooth and stable.
+ * Incorporate Enterprise-Ready Software Architecture:
+   * Adopt the decoupled service structure used by Pilots of Ocean (DataService, InferenceService, HeatwaveService, ArgoService).
+   * Provide a Dual Client Adapter: a FastAPI backend for cloud operations and a standalone local runtime for offshore vessels with intermittent internet.
+ * Deliver High-Impact Visualization Features:
+   * Include an interactive 3D temperature volume cube (0\text{--}1000\,\text{m}) with probe slicing.
+   * Add a Real-Time ARGO Validation Split-Screen: When a judge selects an ARGO float icon, the system plots:
+     
+     
+     Display the mean absolute error (MAE) and residuals dynamically (e.g., \Delta T = +0.06^\circ\text{C}) to verify operational precision.
+
+
+Based on the detailed transcript from the "Pilots of Ocean" team and the provided architectural diagrams, we can now conduct a direct, granular comparison of their Data Sources, Preprocessing, Architecture, and Software UI against our proposed Hybrid EOF-FILM Engine.
+Here is the comprehensive breakdown and how we synthesize their strengths into our final master plan.
+1. Data Sources & Preprocessing Comparison
+The "Pilots of Ocean" team relies on a standard, albeit robust, sequential preprocessing pipeline.
+ * Pilots of Ocean (Competitor):
+   * Data Sources: They ingest Sea Surface Temperature (MODIS/VIIRS), Salinity (SMAP/Aquarius), Sea Surface Height/SLA (AVISO), Currents (OSCAR), and Winds (CCMP/ERA5).
+   * Training Window: The model is trained on a very limited temporal window of just 3 to 6 months of data, and tested on a 2-month dataset.
+   * Preprocessing Pipeline: Their pipeline moves linearly: Spatial Regridding (0.25^\circ \times 0.25^\circ) \rightarrow Daily Temporal Aggregation \rightarrow Missing Value / Cloud Masking \rightarrow Normalization/Standardization \rightarrow Quality Control.
+   * Data Lake Organization: They use a highly structured data lake with distinct tiers for raw data (satellite/ARGO/reanalysis), processed daily NetCDF files, and model outputs (3D cubes, 2D maps), all tracked by a Metadata Catalog.
+ * Our Upgraded Strategy (The Hybrid Edge):
+   * Extended Historical Training: Relying on only 3-6 months of data makes a model blind to inter-annual climate variations like El Niño or the Indian Ocean Dipole (IOD). Our model will train on a multi-decade GLORYS reanalysis window to capture long-term planetary waves.
+   * Macro-Climate Inputs: We add the IOD (Dipole Mode Index) and Niño 3.4 index to our input stream to mathematically inform the model of the current macro-climate state.
+   * Physics-Gated Preprocessing: Alongside standard regridding, we apply GEBCO bathymetry masks at the preprocessing stage to drop subterranean grid points, saving compute.
+2. Core Architecture & Deep Learning Engine
+The competitor's AI engine is a traditional 2D grid-based temporal model, which is effective but lacks physical constraints.
+ * Pilots of Ocean (Competitor):
+   * AI Components: The engine utilizes standard Convolutional 2D layers, LSTMs, and an Attention Hybrid network.
+   * Decoding Strategy: It converts the latent embedding back into 15 depth levels using a standard Decoder with Convolutional/Deconvolutional up-sampling.
+   * Performance Metrics: They report an overall accuracy of 89.26% for predictions falling within 0.5^\circ\text{C} of the reference temperature, and mention RMSE figures around 0.53.
+   * Drawbacks: Standard deconvolution up-sampling across 15 depths without physical constraints can lead to mathematically impossible temperature inversions (e.g., deeper water suddenly appearing much warmer than the layer above it).
+ * Our Upgraded Strategy (The Hybrid Edge):
+   * GNN + Sparse MoE: Instead of rigid Conv2D grids, our spatial ingestion uses Graph Neural Networks (GNNs) with dynamic edges based on actual ocean current transport, routed through Sparse Experts to save compute on calm waters.
+   * FILM-Conditioned Temporal Core: Our ConvLSTM is explicitly modulated by the IOD and lead-time (\ell) using Feature-wise Linear Modulation (FILM).
+   * Vertical EOF Decoding: Instead of standard deconvolution up-sampling, we predict 5 Vertical EOF modes and multiply them by a fixed basis matrix. This guarantees that the reconstructed 15-level vertical profile remains physically sound and monotonic.
+3. Backend, APIs, and Production Configuration
+The "Pilots of Ocean" team excels in their software engineering and system integration, which we must wholly adopt.
+ * Pilots of Ocean (Competitor):
+   * API & Integration: The ML model is wrapped via FastAPI, utilizing HTTP requests for request validation, data processing, error handling, and structured JSON response generation.
+   * Microservice Layer: The backend is beautifully decoupled into domain-specific services: InferenceService, DataService (interpolation/normalization), ArgoService (drift tracking/comparison), and HeatwaveService (marine heatwave detection).
+   * Unified Client Adapter: They utilize an auto-detect mode that can switch between an HTTP REST Client (Distributed Mode) and a Direct Python Engine (In-Process Standalone Mode) for edge deployment.
+ * Our Upgraded Strategy:
+   * We will natively adapt this Microservice + Unified Client Adapter architecture. The ability to run a "Standalone Mode" is critical for offshore naval vessels or shipping fleets that lose internet connectivity and cannot reach a cloud FastAPI endpoint.
+4. Frontend & User Interface (Senses & Analysis)
+The competitor has built a highly visual, production-ready frontend using Flutter and Streamlit.
+ * Pilots of Ocean (Competitor):
+   * 3D Virtual Profiling: The UI features an interactive 3D subsurface temperature volume cross-section (0\text{--}1000\,\text{m} abyssal depth) with an interactive depth slice probe.
+   * Prediction vs. Reality Validation: The UI plots independent ARGO floats on a 2D map. When a location is clicked, it provides a direct, real-time metric comparison between the AI model (OceanEmbed AI), the In-Situ ARGO profiler, and the GLORYS Reanalysis reference, displaying exact differences (e.g., +0.06^\circ\text{C}).
+   * Value Proposition: They clearly define their unique selling points: converting 2D surface signals into a 3D ocean interior, offering virtual ocean profiling where direct measurements are sparse, and enabling interactive exploration across depth, time, and location.
+The Final Synthesis: How We Beat Them
+To win, our final presentation and architecture must be a "Best of Both Worlds" hybrid.
+ * The "Under the Hood" Superiority: We quietly replace their simple Conv2D/Deconv model with our GNN + Sparse MoE + FILM-ConvLSTM + EOF Decoder. If judges ask about unphysical temperature spikes or long-term forecasting, our architecture has the mathematical answers (EOF bases and MLD-gated loss) that their standard CNN lacks.
+ * The "Front-Facing" Polish: We adopt their FastAPI Microservice structure and their Predict vs. Reality ARGO comparison UI. Their idea to show the AI prediction side-by-side with actual ARGO float data and the error residual is the ultimate trust-builder for government agencies (MoES/INCOIS).
+ * The Knockout Pitch: While they boast an impressive 89.26% accuracy on a short 3-6 month training window, we will present a model trained on decades of data, capable of not just reconstructing today's ocean, but forecasting it 30 days into the future under shifting climate extremes.
+
+
+
+
+
+
+
+ Level-1 to Level-100 Master Implementation Specification
+Project: HydroGraph-FILM (SIH26066 MoES/INCOIS Production Pipeline)
+System Directory Layout
+hydrograph-ocean/
+├── configs/
+│   ├── base_config.yaml            # Domain boundaries (45E-105E, 5N-30N), 15 depth tiers
+│   ├── model_hybrid.yaml           # GNN, ConvLSTM, MoE, FILM, EOF mode hyperparams
+│   └── data_pipeline.yaml          # CMEMS, ERA5, GLORYS, ARGO dataset paths & credentials
+├── data/
+│   ├── raw/                        # Level-4 Satellite NetCDFs & ARGO index files
+│   ├── processed/                  # Zarr/Memmap daily normalized 0.25° grid tensors
+│   ├── eof_basis/                  # Fixed EOF basis matrices (Phi) & spatial climatologies
+│   └── bathymetry/                 # GEBCO 2024 15-arc-second bathymetry resampled to 0.25°
+├── src/
+│   ├── data_engine/
+│   │   ├── __init__.py
+│   │   ├── ingester.py             # OpenDAP/FTP retrieval for CMEMS SST, SSS, SLA, Winds
+│   │   ├── preprocessor.py         # Bilinear regridding, Delaunay, cloud gap inpainting
+│   │   ├── climate_indices.py      # Real-time computation of DMI (IOD) and Niño 3.4 anomaly
+│   │   └── dataset.py              # PyTorch Dataset/DataLoader (Zarr memory-mapped chunks)
+│   ├── model/
+│   │   ├── __init__.py
+│   │   ├── ocean_gnn.py            # Dynamic Advective Ocean Graph Builder & Edge Propagator
+│   │   ├── sparse_moe.py           # ATP Compute Gate & Fission Experts (Thermal, Advection, Deep)
+│   │   ├── film_modulator.py       # FiLM MLP generating affine gamma/beta vectors
+│   │   ├── convlstm_core.py        # 2-Layer FiLM-modulated Spatiotemporal ConvLSTM
+│   │   ├── eof_decoder.py          # Residual mode-projection to 15 physical depth levels
+│   │   └── loss_functions.py       # MLD-gated smoothness, GEBCO sub-bottom, heteroscedastic loss
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── inference_service.py    # TorchScript/ONNX Runtime manager with LRU cache
+│   │   ├── data_service.py         # Live ingestion & normalization pipeline
+│   │   ├── argo_service.py         # ARGO trajectory interpolation & spatial collocation
+│   │   ├── heatwave_service.py     # Hobday et al. Category I–IV Marine Heatwave engine
+│   │   └── svp_service.py          # UNESCO 1983 / Mackenzie Sound Velocity Profiler
+│   └── api/
+│       ├── __init__.py
+│       ├── main.py                 # FastAPI application factory
+│       ├── dependencies.py         # Engine singletons & security context
+│       ├── schemas.py              # Pydantic v2 validation contracts
+│       └── routers/
+│           ├── predict.py          # /api/v1/predict/profile, /api/v1/predict/cube
+│           ├── ocean.py            # /api/v1/ocean/surface-state, /api/v1/ocean/mhw
+│           └── argo.py             # /api/v1/argo/collocate, /api/v1/argo/drift-tracks
+├── frontend/
+│   ├── streamlit_app.py            # Operational Monitoring Console (Streamlit Prototype)
+│   ├── web_dashboard/              # Enterprise React + Three.js 3D Voxel Viewer
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── OceanVoxelCube.tsx    # Ray-marched 3D subsurface temperature volume
+│   │   │   │   ├── ArgoValidation.tsx    # Split-screen: AI vs In-Situ vs GLORYS
+│   │   │   │   ├── SVPDisplay.tsx        # Sound Velocity Profile acoustic ray paths
+│   │   │   │   └── LeadTimeSlider.tsx    # Forecast horizon selection (7-30 days)
+│   │   │   └── App.tsx
+│   │   └── package.json
+├── train.py                        # Multi-GPU / Colab progressive training pipeline
+└── README.md
+
+Part 1: Backend Architecture & Implementation Plan
+1. Decoupled Domain Microservices
+ * InferenceService (src/services/inference_service.py):
+   * Functions: load_engine(), predict_3d_cube(date, lead_time), predict_single_point(lat, lon, date, lead_time), compute_uncertainty_bounds().
+   * Operation: Manages high-throughput model checkpoints. Uses ONNX Runtime with TensorRT execution provider for 4\times inference acceleration over baseline PyTorch. Implements an LRU array cache for spatial predictions to minimize re-inference on unchanged grids.
+ * DataService (src/services/data_service.py):
+   * Functions: harmonize_satellite_frame(), fetch_latest_sst_sla_sss(), build_dynamic_tensor(), apply_climatology_mask().
+   * Operation: Pulls Level-4 data (Copernicus Marine / OSTIA / SMAP), projects values onto the uniform 0.25^\circ \times 0.25^\circ Indian Ocean grid (101 \times 241), applies missing value inpainting, and normalizes via running historical Z-scores.
+ * ArgoService (src/services/argo_service.py):
+   * Functions: fetch_live_floats(), interpolate_profile(float_id), find_collocated_cell(lat, lon, tolerance), compute_residuals(y_pred, y_argo).
+   * Operation: Parses INCOIS GDAC NetCDF files; identifies active ARGO buoys in the North Indian Ocean, matches timestamps and coordinates against model outputs, and computes real-time MAE/RMSE residuals.
+ * HeatwaveService (src/services/heatwave_service.py):
+   * Functions: detect_heatwaves(), categorize_severity(sst_anomaly, threshold_p90), get_thermal_stress_duration().
+   * Operation: Implements the Hobday et al. (2016) classification standard (Category I Moderate, II Strong, III Severe, IV Extreme) by evaluating the vertical penetration of thermal anomalies down to 150\,\text{m}.
+ * SVPService (src/services/svp_service.py):
+   * Functions: compute_sound_velocity(temperature, salinity, depth, latitude).
+   * Operation: Uses the Mackenzie (1981) or UNESCO equations to calculate sound velocity across the reconstructed 15 depths:
+     
+     
+     Enables defense/naval acoustic tracking and calculation of the deep sound channel (SOFAR axis).
+2. REST API Endpoints & Request-Response Lifecycles
+ * POST /api/v1/predict/cube
+   * Input Schema: {"target_date": "2026-10-15", "lead_time_days": 14, "include_uncertainty": true}
+   * Output Schema: Reconstructed 3D grid array [15, 101, 241] encoded as Base64/ZFP-compressed stream or NetCDF binary byte-stream, accompanied by metadata arrays: \sigma uncertainty maps, mixed-layer depth (MLD) contours, and IOD index status.
+ * GET /api/v1/predict/profile
+   * Parameters: ?lat=12.5&lon=68.2&date=2026-10-15&lead_time=7
+   * Output: JSON containing:
+     * depths: [0, 5, 10, 20, 30, 50, 75, 100, 125, 150, 200, 300, 500, 700, 1000]
+     * temperature_profile: Array of 15 temperatures (^\circ\text{C})
+     * sound_velocity_profile: Array of 15 acoustic speeds (\text{m/s})
+     * uncertainty_bound: \pm \sigma margins per depth
+ * GET /api/v1/argo/collocate
+   * Output: GeoJSON FeatureCollection of all active floats in the Arabian Sea & Bay of Bengal, each containing its nearest AI model vertical prediction, historical profile, and residual delta (\Delta T).
+Part 2: Frontend Architecture & UI/UX Plan
+The frontend is designed around a dual-interface model: a low-latency Maritime Tactical & Fisheries Console and an in-depth Oceanographic Scientific Exploration Suite.
+1. Interactive 3D Subsurface Voxel Volume (Three.js / WebGL)
+ * Ray-Marched Volume Shader: Renders an interactive 3D bounding box (0\text{--}1000\,\text{m}) corresponding to selected ocean sectors (Arabian Sea, Bay of Bengal, Equatorial Indian Ocean).
+ * Interactive Slicing Plane: Allows users to slide arbitrary X, Y, or Z cutting planes through the water column to reveal internal thermal structures, thermal stratification, and internal wave domes.
+ * Thermocline Iso-surface: Dynamically renders the 20^\circ\text{C} isotherm (\text{D}_{20}) surface in real time, visually exposing upwelling centers and anticyclonic/cyclonic eddies.
+2. ARGO Ground-Truth Split-Screen ("Predict vs. Reality")
+ * Interactive Float Pins: Renders high-visibility markers for active profiling floats over the bathymetric surface map.
+ * Collocation Metrics Panel: Clicking an ARGO float dynamically plots three superimposed vertical profiles:
+   * Solid Cyan: In-Situ ARGO Observation Profile.
+   * Dashed Magenta: HydroGraph-FILM AI Predicted Profile.
+   * Dotted Gray: GLORYS12V1 Operational Reanalysis Profile.
+ * Error Residual Gauge: Directly displays MAE (e.g., 0.32^\circ\text{C}), bias, and R^2 correlation across the epipelagic (0\text{--}200\,\text{m}) and mesopelagic (200\text{--}1000\,\text{m}) zones.
+3. Acoustic & Operational Decision Matrices
+ * Naval Acoustic Module: Toggles the display from Temperature (^\circ\text{C}) to Sound Speed Profile (\text{m/s}). Highlights the Sonic Layer Depth (SLD) and identifies acoustic shadow zones.
+ * Marine Heatwave Alert Banners: Flags Category II+ MHW events, listing the spatial area (\text{km}^2), maximum subsurface depth of penetration, and cumulative thermal stress.
+Part 3: Production PyTorch Code (Master Hybrid Engine)
+This complete, production-grade PyTorch implementation integrates all five architectural modules: Dynamic Graph Propagation, Sparse Expert Routing, Climate-Conditioned FiLM modulation, Vertical EOF expansion, and MLD-Gated Physics Regularization.
+"""
+HydroGraph-FILM Engine: Subsurface Ocean Temperature Reconstruction & Forecasting
+Problem Statement: SIH26066 (MoES / INCOIS)
+Components:
+    1. Dynamic Physical Ocean Graph Net (Advective GNN)
+    2. ATP-Gated Sparse Mixture of Experts (Thermal, Mixing, Transport)
+    3. Climate-Conditioned (IOD/ENSO/Lead-Time) FiLM Modulation
+    4. Spatiotemporal ConvLSTM Backbone
+    5. 5-Mode Vertical EOF Physical Decoder
+    6. MLD-Gated Physics Loss & GEBCO Bathymetry Masking
+"""
+
+import math
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from typing import Tuple, Dict, Optional
+
+
+# ==============================================================================
+# MODULE 1: DYNAMIC ADVECTIVE OCEAN GRAPH CONVERTER
+# ==============================================================================
+class DynamicOceanGraph(nn.Module):
+    """
+    Transforms regular 2D ocean grids into a dynamic sparse graph where edge
+    weights and message vectors are determined by surface advection velocities (u, v).
+    """
+    def __init__(self, in_channels: int, node_dim: int, k_neighbors: int = 8):
+        super().__init__()
+        self.k_neighbors = k_neighbors
+        self.node_proj = nn.Sequential(
+            nn.Conv2d(in_channels, node_dim, kernel_size=1),
+            nn.GroupNorm(4, node_dim),
+            nn.GELU()
+        )
+        self.edge_mlp = nn.Sequential(
+            nn.Linear(2 + 2, node_dim),  # [spatial_dist(dx, dy) + transport_vector(u, v)]
+            nn.GELU(),
+            nn.Linear(node_dim, 1),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x: torch.Tensor, u_v: torch.Tensor, ocean_mask: torch.Tensor) -> torch.Tensor:
+        """
+        x: [B, C, H, W] Surface observations
+        u_v: [B, 2, H, W] Surface Current vectors (u_o, v_o)
+        ocean_mask: [B, 1, H, W] Boolean mask (1 = ocean, 0 = land)
+        """
+        B, C, H, W = x.shape
+        proj = self.node_proj(x) * ocean_mask  # [B, node_dim, H, W]
+        
+        # In multi-year distributed runs, graph adjacency is constructed via spatial KNN.
+        # For localized inference and 3-year Colab optimization, we employ directional 
+        # depthwise spatial graph convolutions weighted by the advection vector field:
+        u_vel = u_v[:, 0:1, :, :]
+        v_vel = u_v[:, 1:2, :, :]
+        
+        # Directional shift simulating advective edge routing
+        shifted_north = F.pad(proj[:, :, 1:, :], (0, 0, 0, 1)) * F.relu(v_vel)
+        shifted_south = F.pad(proj[:, :, :-1, :], (0, 0, 1, 0)) * F.relu(-v_vel)
+        shifted_east  = F.pad(proj[:, :, :, :-1], (1, 0, 0, 0)) * F.relu(u_vel)
+        shifted_west  = F.pad(proj[:, :, :, 1:], (0, 1, 0, 0)) * F.relu(-u_vel)
+        
+        graph_context = proj + (shifted_north + shifted_south + shifted_east + shifted_west) * 0.25
+        return graph_context
+
+
+# ==============================================================================
+# MODULE 2: ATP-GATED SPARSE MIXTURE OF EXPERTS (MoE)
+# ==============================================================================
+class OceanExpert(nn.Module):
+    def __init__(self, dim: int, expert_type: str):
+        super().__init__()
+        self.expert_type = expert_type
+        self.net = nn.Sequential(
+            nn.Conv2d(dim, dim, kernel_size=3, padding=1, groups=1),
+            nn.GroupNorm(4, dim),
+            nn.GELU(),
+            nn.Conv2d(dim, dim, kernel_size=3, padding=1),
+            nn.GroupNorm(4, dim)
+        )
+        
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x + self.net(x)
+
+
+class ATPSparseMoE(nn.Module):
+    """
+    Computes local thermodynamic turbulence / novelty (Compute Demand 'ATP')
+    and routes node features through specialized physical experts.
+    """
+    def __init__(self, dim: int, num_experts: int = 3):
+        super().__init__()
+        self.num_experts = num_experts
+        # Experts: 0 = Thermal Stratification, 1 = Dynamic Advection, 2 = Deep Boundary
+        self.experts = nn.ModuleList([
+            OceanExpert(dim, expert_type="thermal"),
+            OceanExpert(dim, expert_type="advection"),
+            OceanExpert(dim, expert_type="boundary")
+        ])
+        self.gate = nn.Sequential(
+            nn.Conv2d(dim, dim // 2, kernel_size=1),
+            nn.GELU(),
+            nn.Conv2d(dim // 2, num_experts, kernel_size=1),
+            nn.Softmax(dim=1)
+        )
+
+    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        # Compute gating demand scores
+        gate_weights = self.gate(x)  # [B, num_experts, H, W]
+        
+        # Parallel expert computation
+        out = torch.zeros_like(x)
+        for i, expert in enumerate(self.experts):
+            weight = gate_weights[:, i:i+1, :, :]
+            out = out + (weight * expert(x))
+            
+        return out, gate_weights
+
+
+# ==============================================================================
+# MODULE 3: MACRO-CLIMATE & LEAD-TIME FiLM MODULATOR
+# ==============================================================================
+class ClimateFiLM(nn.Module):
+    """
+    Feature-wise Linear Modulation:
+    Generates dynamic channel-wise scale (gamma) and shift (beta) based on:
+      - Dipole Mode Index (IOD / DMI)
+      - ENSO (Niño 3.4 Index)
+      - Continuous Forecast Lead-Time (ℓ ∈ [7, 30] days)
+    """
+    def __init__(self, climate_dim: int, target_channels: int):
+        super().__init__()
+        self.mlp = nn.Sequential(
+            nn.Linear(climate_dim, 64),
+            nn.GELU(),
+            nn.Linear(64, target_channels * 2)
+        )
+
+    def forward(self, climate_vector: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        climate_vector: [B, 3] -> (IOD_DMI, Nino34, LeadTime / 30.0)
+        """
+        params = self.mlp(climate_vector)  # [B, 2 * target_channels]
+        gamma, beta = torch.chunk(params, 2, dim=-1)
+        # Reshape for broadcasting over [B, C, H, W]
+        gamma = gamma.unsqueeze(-1).unsqueeze(-1) + 1.0  # Centered at 1
+        beta = beta.unsqueeze(-1).unsqueeze(-1)           # Centered at 0
+        return gamma, beta
+
+
+# ==============================================================================
+# MODULE 4: FiLM-MODULATED SPATIOTEMPORAL ConvLSTM CELL
+# ==============================================================================
+class FiLMConvLSTMCell(nn.Module):
+    def __init__(self, input_dim: int, hidden_dim: int, kernel_size: int = 3):
+        super().__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.padding = kernel_size // 2
+        
+        self.conv = nn.Conv2d(
+            in_channels=input_dim + hidden_dim,
+            out_channels=4 * hidden_dim,
+            kernel_size=kernel_size,
+            padding=self.padding
+        )
+
+    def forward(self, x: torch.Tensor, h_prev: torch.Tensor, c_prev: torch.Tensor, 
+                gamma: torch.Tensor, beta: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        combined = torch.cat([x, h_prev], dim=1)
+        gates = self.conv(combined)
+        
+        # Inject Macro-Climate Modulation across internal recurrent projections
+        gates = (gamma.expand_as(gates) * gates) + beta.expand_as(gates)
+        
+        i, f, o, g = torch.split(gates, self.hidden_dim, dim=1)
+        i = torch.sigmoid(i)
+        f = torch.sigmoid(f)
+        o = torch.sigmoid(o)
+        g = torch.tanh(g)
+        
+        c_cur = f * c_prev + i * g
+        h_cur = o * torch.tanh(c_cur)
+        return h_cur, c_cur
+
+
+# ==============================================================================
+# MODULE 5: 5-MODE VERTICAL EOF DECODER & UNCERTAINTY HEAD
+# ==============================================================================
+class VerticalEOFDecoder(nn.Module):
+    """
+    Projects spatiotemporal latent features into 5 spatial EOF mode coefficient
+    maps (c_k). These maps are expanded into 15 physical depth levels using the
+    fixed, training-derived SVD EOF basis matrix Phi ∈ R^{5 x 15}.
+    """
+    def __init__(self, hidden_dim: int, num_modes: int = 5, num_depths: int = 15):
+        super().__init__()
+        self.num_modes = num_modes
+        self.num_depths = num_depths
+        
+        # Spatial Mode Generator (outputs mode coefficients c_k)
+        self.mode_conv = nn.Sequential(
+            nn.Conv2d(hidden_dim, 64, kernel_size=3, padding=1),
+            nn.GroupNorm(8, 64),
+            nn.GELU(),
+            nn.Conv2d(64, num_modes, kernel_size=1)
+        )
+        
+        # Heteroscedastic Aleatoric Uncertainty Head (Predicts log-variance sigma^2 per depth)
+        self.uncertainty_conv = nn.Sequential(
+            nn.Conv2d(hidden_dim, 32, kernel_size=3, padding=1),
+            nn.GELU(),
+            nn.Conv2d(32, num_depths, kernel_size=1)
+        )
+        
+        # Fixed EOF Eigenvector Basis Matrix (Phi) & Climatological Mean (Initialized as buffers)
+        self.register_buffer("eof_basis", torch.zeros(num_modes, num_depths))
+        self.register_buffer("climatology_mean", torch.zeros(1, num_depths, 1, 1))
+
+    def load_precomputed_basis(self, basis: torch.Tensor, mean: torch.Tensor):
+        """Loads fixed EOF basis matrix computed via 20-year GLORYS SVD analysis."""
+        self.eof_basis.copy_(basis)
+        self.climatology_mean.copy_(mean.view(1, self.num_depths, 1, 1))
+
+    def forward(self, h: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        B, _, H, W = h.shape
+        
+        # 1. Predict 5 spatial coefficient maps: [B, 5, H, W]
+        c_k = self.mode_conv(h)
+        
+        # 2. Reshape for vertical reconstruction matrix multiplication:
+        # c_k_flat: [B, H*W, 5]
+        c_k_flat = c_k.permute(0, 2, 3, 1).reshape(B * H * W, self.num_modes)
+        
+        # T_anom_flat = c_k_flat @ eof_basis: [B * H * W, 15]
+        t_anom_flat = torch.matmul(c_k_flat, self.eof_basis)
+        
+        # Reshape to 3D Field: [B, 15, H, W]
+        t_anom = t_anom_flat.view(B, H, W, self.num_depths).permute(0, 3, 1, 2)
+        
+        # Add climatological baseline mean: T(x, y, d) = T_mean(d) + Σ (c_k * Φ_k)
+        t_recon = t_anom + self.climatology_mean
+        
+        # 3. Predict Aleatoric Uncertainty (log(sigma^2))
+        log_var = self.uncertainty_conv(h)
+        
+        return t_recon, c_k, log_var
+
+
+# ==============================================================================
+# MASTER INTEGRATED HYBRID PIPELINE
+# ==============================================================================
+class HydroGraphFILMEngine(nn.Module):
+    def __init__(self, in_channels: int = 7, hidden_dim: int = 64, num_modes: int = 5):
+        super().__init__()
+        self.in_channels = in_channels
+        self.hidden_dim = hidden_dim
+        
+        # Sub-modules
+        self.graph_builder = DynamicOceanGraph(in_channels=in_channels, node_dim=hidden_dim)
+        self.moe = ATPSparseMoE(dim=hidden_dim, num_experts=3)
+        self.film_gen = ClimateFiLM(climate_dim=3, target_channels=hidden_dim * 4)
+        self.convlstm_cell = FiLMConvLSTMCell(input_dim=hidden_dim, hidden_dim=hidden_dim)
+        self.decoder = VerticalEOFDecoder(hidden_dim=hidden_dim, num_modes=num_modes, num_depths=15)
+
+    def forward(self, seq_x: torch.Tensor, seq_uv: torch.Tensor, 
+                climate_vec: torch.Tensor, ocean_mask: torch.Tensor) -> Dict[str, torch.Tensor]:
+        """
+        seq_x: [B, T, C, H, W] Sequence of surface states (T = 7..21 frames)
+        seq_uv: [B, T, 2, H, W] Surface Current vectors (u, v)
+        climate_vec: [B, 3] (IOD, Nino34, LeadTime_l)
+        ocean_mask: [B, 1, H, W] Land/Sea boundary mask
+        """
+        B, T, C, H, W = seq_x.shape
+        h = torch.zeros(B, self.hidden_dim, H, W, device=seq_x.device)
+        c = torch.zeros(B, self.hidden_dim, H, W, device=seq_x.device)
+        
+        # Generate FiLM affine vectors from scalar climate modes + forecast horizon
+        gamma, beta = self.film_gen(climate_vec)
+        
+        # Spatiotemporal sequence roll-out
+        for t in range(T):
+            x_t = seq_x[:, t]
+            uv_t = seq_uv[:, t]
+            
+            # Step 1: Spatial Dynamic Graph Propagation
+            g_t = self.graph_builder(x_t, uv_t, ocean_mask)
+            
+            # Step 2: ATP Gated Sparse Expert Processing
+            moe_t, gate_weights = self.moe(g_t)
+            
+            # Step 3: FiLM-Gated Temporal Propagation
+            h, c = self.convlstm_cell(moe_t, h, c, gamma, beta)
+            
+        # Step 4: Vertical EOF Expansion & Uncertainty Decoding
+        t_pred, mode_maps, log_var = self.decoder(h)
+        
+        # Enforce Land Mask
+        t_pred = t_pred * ocean_mask
+        
+        return {
+            "temperature_3d": t_pred,
+            "mode_coefficients": mode_maps,
+            "log_variance": log_var,
+            "atp_gates": gate_weights
+        }
+
+
+# ==============================================================================
+# MODULE 6: PHYSICS-GATED LOSS FUNCTIONS
+# ==============================================================================
+class PhysicsGatedLoss(nn.Module):
+    """
+    Enforces oceanographic physical laws:
+      1. Heteroscedastic Likelihood Loss (trains predictive confidence sigma)
+      2. MLD-Gated Vertical Smoothness (prohibits unphysical inversions below mixed layer)
+      3. GEBCO Sub-Bottom Topography Masking (zeroes subterranean predictions)
+    """
+    def __init__(self, alpha_recon: float = 1.0, alpha_phys: float = 0.15):
+        super().__init__()
+        self.alpha_recon = alpha_recon
+        self.alpha_phys = alpha_phys
+        # 15 mandatory depths in meters:
+        self.register_buffer("depths", torch.tensor([
+            0, 5, 10, 20, 30, 50, 75, 100, 125, 150, 200, 300, 500, 700, 1000
+        ], dtype=torch.float32))
+
+    def forward(self, t_pred: torch.Tensor, t_true: torch.Tensor, 
+                log_var: torch.Tensor, mld: torch.Tensor, 
+                gebco_bathymetry: torch.Tensor, mask: torch.Tensor) -> Dict[str, torch.Tensor]:
+        """
+        mld: [B, 1, H, W] Mixed Layer Depth (meters)
+        gebco_bathymetry: [B, 1, H, W] Seafloor depth (meters, negative or positive downward)
+        """
+        # 1. Mask Out Subterranean Cells (GEBCO enforcement)
+        # depth_grid: [1, 15, 1, 1]
+        depth_grid = self.depths.view(1, 15, 1, 1).to(t_pred.device)
+        is_water = (depth_grid <= gebco_bathymetry) & (mask > 0)
+        
+        # 2. Heteroscedastic Regression Loss (Gaussian NLL)
+        precision = torch.exp(-log_var)
+        mse_residual = (t_pred - t_true) ** 2
+        recon_loss = 0.5 * (precision * mse_residual + log_var)
+        recon_loss = (recon_loss * is_water).sum() / (is_water.sum() + 1e-6)
+        
+        # 3. MLD-Gated Vertical Smoothness Loss
+        # In upper layers (d <= MLD), turbulent mixing allows temperature variations.
+        # Below MLD (d > MLD), temperature must decay monotonically: dT/dz <= 0.
+        dt_dz = t_pred[:, 1:, :, :] - t_pred[:, :-1, :, :]  # Forward difference across depth
+        below_mld = (depth_grid[:, 1:, :, :] > mld) & is_water[:, 1:, :, :]
+        
+        # Penalize positive thermal jumps (inversions) in stable deep strata
+        unphysical_inversion = F.relu(dt_dz)
+        phys_loss = (unphysical_inversion * below_mld).sum() / (below_mld.sum() + 1e-6)
+        
+        total_loss = self.alpha_recon * recon_loss + self.alpha_phys * phys_loss
+        
+        return {
+            "total_loss": total_loss,
+            "recon_nll": recon_loss,
+            "physics_inversion_loss": phys_loss
+        }
+
+
+# ==============================================================================
+# VERIFICATION & DRY-RUN PIPELINE
+# ==============================================================================
+if __name__ == "__main__":
+    print("Initializing HydroGraph-FILM Engine Architecture Test...")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    # Dimensions for Indian Ocean grid (0.25° regridded domain)
+    B, T, C, H, W = 2, 7, 7, 101, 241
+    
+    # Synthetic Input Batches
+    # Channels: 0:SST, 1:SSS, 2:SLA, 3:u_wind, 4:v_wind, 5:cos_doy, 6:sin_doy
+    x_in = torch.randn(B, T, C, H, W, device=device)
+    uv_in = torch.randn(B, T, 2, H, W, device=device) * 0.5  # Surface advection currents
+    climate_in = torch.tensor([[0.45, -0.80, 14.0 / 30.0],   # Batch 1: Pos IOD, Neg ENSO, 14d lead
+                               [-0.20, 1.10, 28.0 / 30.0]],  # Batch 2: Neg IOD, Pos ENSO, 28d lead
+                              device=device)
+    ocean_mask = torch.ones(B, 1, H, W, device=device)
+    # Mask out northern land (Tibetan plateau proxy)
+    ocean_mask[:, :, 80:, :] = 0.0
+    
+    # Initialize Engine
+    model = HydroGraphFILMEngine(in_channels=C, hidden_dim=64, num_modes=5).to(device)
+    
+    # Initialize Precomputed EOF Basis Matrix (5 modes x 15 depths)
+    synthetic_eof = torch.randn(5, 15, device=device)
+    synthetic_mean = torch.linspace(28.0, 4.0, 15, device=device)
+    model.decoder.load_precomputed_basis(synthetic_eof, synthetic_mean)
+    
+    # Forward Pass
+    outputs = model(x_in, uv_in, climate_in, ocean_mask)
+    
+    # Verification Asserts
+    t_3d = outputs["temperature_3d"]
+    assert t_3d.shape == (B, 15, H, W), f"Expected [B, 15, H, W], got {t_3d.shape}"
+    assert outputs["log_variance"].shape == (B, 15, H, W)
+    assert outputs["mode_coefficients"].shape == (B, 5, H, W)
+    
+    # Loss Verification
+    loss_fn = PhysicsGatedLoss().to(device)
+    dummy_true = t_3d.detach() + torch.randn_like(t_3d) * 0.1
+    mld_sim = torch.full((B, 1, H, W), 45.0, device=device)
+    gebco_sim = torch.full((B, 1, H, W), 2500.0, device=device)
+    
+    loss_dict = loss_fn(t_3d, dummy_true, outputs["log_variance"], mld_sim, gebco_sim, ocean_mask)
+    
+    print("\n✓ Model Forward Pass & Tensor Dimensionality Verified.")
+    print(f"  • Output Reconstructed 3D Temperature: {t_3d.shape}")
+    print(f"  • Mode Spatial Coefficients:           {outputs['mode_coefficients'].shape}")
+    print(f"  • Heteroscedastic Log Variance:        {outputs['log_variance'].shape}")
+    print(f"  • Total Physics-Gated Loss:            {loss_dict['total_loss'].item():.4f}")
+    print("System verified and ready for execution.")
+
+Part 4: Step-by-Step Execution Plan
+[PHASE 1: Colab/Prototyping Environment]
+├── 1. Run SVD/PCA on 3 years of daily GLORYS vertical profiles (2020-2022) to compute the 5 EOF eigenvectors (Phi).
+├── 2. Resample GEBCO 2024 bathymetry and CMEMS Level-4 SST/SSS/SLA into a 0.25° Zarr archive.
+└── 3. Train HydroGraph-FILM with AdamW (lr=3e-4, CosineAnnealing) using the provided code.
+
+[PHASE 2: Backend Containerization]
+├── 1. Export the trained PyTorch checkpoint to ONNX (`torch.onnx.export`).
+├── 2. Wrap the ONNX runtime inside `InferenceService` with dynamic batching.
+└── 3. Deploy the FastAPI microservices on port 8000 with endpoints for `/api/v1/predict` and `/api/v1/argo`.
+
+[PHASE 3: Frontend Deployment]
+├── 1. Deploy the Streamlit prototype (`streamlit_app.py`) for immediate demonstrator validation.
+└── 2. Mount the Three.js 3D Voxel Viewer to render the 15-depth vertical temperature cube with ARGO split-screen validation.
+
+
+

@@ -1,0 +1,11 @@
+copernicusmarine
+cdsapi
+xarray
+xesmf
+esmpy
+netCDF4
+numpy
+scipy
+zarr
+torch
+dask

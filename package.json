@@ -1,0 +1,16 @@
+{
+  "name": "lp_ocean",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:backend": "npm --prefix backend dev",
+    "dev:frontend": "npm --prefix frontend dev",
+    "server": "npm --prefix backend start",
+    "client": "npm --prefix frontend dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,14 @@
+torch>=2.1.0
+numpy>=1.24.0
+xarray>=2023.1.0
+zarr>=2.16.0
+netCDF4>=1.6.0
+scipy>=1.11.0
+pandas>=2.0.0
+xesmf>=0.7.0          # regridding (conda install -c conda-forge xesmf)
+cftime>=1.6.0
+tqdm>=4.65.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scikit-learn>=1.3.0
+motuclient>=1.8.0      # CMEMS download client (pip install motuclient)
